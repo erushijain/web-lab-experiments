@@ -1,34 +1,31 @@
-const taskInput=document.getElementById("taskInput");
-const addBtn=document.getElementById("addBtn");
-const taskList=document.getElementById("taskList");
-const counter=document.getElementById("counter");
+const input=document.getElementById("task");
+const addBtn=document.getElementById("add");
+const list=document.getElementById("list");
+const count=document.getElementById("count");
 
-function updateCounter(){
-const total=taskList.children.length;
-const done=taskList.querySelectorAll("li.completed").length;
-counter.textContent=`${done} of ${total} tasks completed`;
+function showCount(){
+const all=list.children.length;
+const done=list.getElementsByClassName("done").length;
+count.textContent="Completed: "+done+" / "+all;
 }
 
 function addTask(){
-const text=taskInput.value.trim();
-if(text===""){alert("Please enter a task!");return;}
+const value=input.value.trim();
+if(value===""){alert("Task cannot be empty");return;}
 const li=document.createElement("li");
-const checkbox=document.createElement("input");
-checkbox.type="checkbox";
 const span=document.createElement("span");
-span.textContent=text;
-const deleteBtn=document.createElement("button");
-deleteBtn.textContent="Delete";
-deleteBtn.className="delete-btn";
-checkbox.addEventListener("change",function(){li.classList.toggle("completed",checkbox.checked);updateCounter();});
-deleteBtn.addEventListener("click",function(){li.remove();updateCounter();});
-li.append(checkbox,span,deleteBtn);
-taskList.appendChild(li);
-taskInput.value="";
-taskInput.focus();
-updateCounter();
+span.textContent=value;
+const del=document.createElement("button");
+del.textContent="Delete";
+li.onclick=function(){li.classList.toggle("done");showCount();};
+del.onclick=function(e){e.stopPropagation();li.remove();showCount();};
+li.appendChild(span);
+li.appendChild(del);
+list.appendChild(li);
+input.value="";
+input.focus();
+showCount();
 }
-
-addBtn.addEventListener("click",addTask);
-taskInput.addEventListener("keypress",function(e){if(e.key==="Enter")addTask();});
-updateCounter();
+addBtn.onclick=addTask;
+input.addEventListener("keydown",function(e){if(e.key==="Enter"){addTask();}});
+showCount();
